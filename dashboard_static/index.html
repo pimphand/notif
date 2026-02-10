@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notif Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+  <div id="app" class="flex">
+    <aside class="w-56 bg-slate-800 text-white min-h-screen flex flex-col">
+      <div class="p-4 border-b border-slate-700">
+        <span class="font-semibold">Notif</span>
+      </div>
+      <nav class="p-2 flex-1">
+        <a href="#" data-page="domains" class="nav-link block px-3 py-2 rounded hover:bg-slate-700">Domains</a>
+        <a href="#" data-page="channels" class="nav-link block px-3 py-2 rounded hover:bg-slate-700">Channels</a>
+        <a href="#" data-page="ws-status" class="nav-link block px-3 py-2 rounded hover:bg-slate-700">WS Status</a>
+      </nav>
+      <div class="p-4 border-t border-slate-700">
+        <div id="user-info" class="text-sm text-slate-300"></div>
+        <a href="/login.html" id="logout" class="text-indigo-400 hover:underline text-sm mt-2 inline-block">Logout</a>
+      </div>
+    </aside>
+    <main class="flex-1 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h1 id="page-title" class="text-2xl font-bold text-slate-800">Dashboard</h1>
+        <span id="ws-badge" class="px-2 py-1 rounded text-xs font-medium bg-slate-200 text-slate-600">—</span>
+      </div>
+      <div id="content" class="bg-white rounded-xl shadow p-6"></div>
+    </main>
+  </div>
+
+  <script>
+    var API_BASE = '';
+    function token() { return localStorage.getItem('notif_token'); }
+    function authHeaders() {
+      var t = token();
+      return t ? { 'Authorization': 'Bearer ' + t } : {};
+    }
+    function checkAuth() {
+      if (!token()) { window.location.href = '/login.html'; return false; }
+      return true;
+    }
+    function api(method, path, data) {
+      var opts = { method: method, url: API_BASE + path, headers: { 'Content-Type': 'application/json', ...authHeaders() } };
+      if (data) opts.data = JSON.stringify(data);
+      return $.ajax(opts);
+    }
+
+    function loadUser() {
+      api('GET', '/dashboard/user').then(function (u) {
+        $('#user-info').text(u.email);
+      }).fail(function () { window.location.href = '/login.html'; });
+    }
+
+    function setWsBadge(connected) {
+      var el = $('#ws-badge');
+      if (connected) { el.removeClass('bg-slate-200 text-slate-600').addClass('bg-green-100 text-green-800').text('Connected'); }
+      else { el.removeClass('bg-green-100 text-green-800').addClass('bg-slate-200 text-slate-600').text('Disconnected'); }
+    }
+
+    function renderDomains() {
+      api('GET', '/dashboard/domains').then(function (list) {
+        var html = '<p class="text-slate-600 mb-4">1 domain = 1 API key. Add domain to get a key; use it for WebSocket (Origin must match domain) and broadcast.</p>';
+        html += '<div class="space-y-4"><input type="text" id="new-domain" placeholder="example.com" class="border rounded px-3 py-2 w-64"> <button id="add-domain-btn" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add Domain</button>';
+        html += '<table class="w-full border-collapse mt-4"><thead><tr class="border-b"><th class="text-left py-2">Domain</th><th class="text-left py-2">API Key</th><th class="text-left py-2">Status</th><th class="text-left py-2">Created</th><th></th></tr></thead><tbody>';
+        list.forEach(function (d) {
+          html += '<tr class="border-b"><td class="py-2">' + escapeHtml(d.domain_name) + '</td><td class="font-mono text-sm">' + escapeHtml(d.key) + '</td><td>' + (d.is_active ? '<span class="text-green-600">Active</span>' : '<span class="text-slate-400">Inactive</span>') + '</td><td>' + d.created_at + '</td><td><button class="toggle-domain text-sm text-indigo-600 mr-2" data-id="' + d.id + '" data-active="' + d.is_active + '">' + (d.is_active ? 'Deactivate' : 'Activate') + '</button><button class="del-domain text-sm text-red-600" data-id="' + d.id + '">Delete</button></td></tr>';
+        });
+        html += '</tbody></table></div>';
+        $('#content').html(html);
+        $('#add-domain-btn').on('click', function () {
+          var name = $('#new-domain').val().trim();
+          if (!name) return;
+          api('POST', '/dashboard/domains', { domain_name: name }).then(function (r) {
+            $('#new-domain').val('');
+            alert('Created. API Key: ' + r.key);
+            renderDomains();
+          }).fail(function (xhr) { alert((xhr.responseJSON && xhr.responseJSON.error) || 'Failed'); });
+        });
+        $('.toggle-domain').on('click', function () {
+          var id = $(this).data('id'), active = !$(this).data('active');
+          api('PATCH', '/dashboard/domains/' + id, { is_active: active }).then(function () { renderDomains(); }).fail(function (xhr) { alert((xhr.responseJSON && xhr.responseJSON.error) || 'Failed'); });
+        });
+        $('.del-domain').on('click', function () {
+          var id = $(this).data('id');
+          if (!confirm('Delete this domain and its key?')) return;
+          api('DELETE', '/dashboard/domains/' + id).then(function () { renderDomains(); }).fail(function (xhr) { alert((xhr.responseJSON && xhr.responseJSON.error) || 'Failed'); });
+        });
+      }).fail(function () { $('#content').html('<p class="text-red-600">Failed to load domains.</p>'); });
+    }
+
+    function renderChannels() {
+      api('GET', '/dashboard/channels').then(function (list) {
+        var html = '<table class="w-full border-collapse"><thead><tr class="border-b"><th class="text-left py-2">Channel</th><th class="text-left py-2">Domain ID</th><th class="text-left py-2">Created</th></tr></thead><tbody>';
+        list.forEach(function (c) {
+          html += '<tr class="border-b"><td class="py-2">' + escapeHtml(c.name) + '</td><td class="font-mono text-sm">' + c.domain_id + '</td><td>' + c.created_at + '</td></tr>';
+        });
+        html += '</tbody></table>';
+        if (list.length === 0) html = '<p class="text-slate-600">Channels appear when clients subscribe (with a domain API key).</p>';
+        $('#content').html(html);
+      }).fail(function () { $('#content').html('<p class="text-red-600">Failed to load channels.</p>'); });
+    }
+
+    function renderWsStatus() {
+      api('GET', '/dashboard/ws-status').then(function (res) {
+        var html = '<h3 class="font-semibold mb-2">Connections by channel</h3><table class="w-full border-collapse"><thead><tr class="border-b"><th class="text-left py-2">Channel</th><th class="text-left py-2">Count</th></tr></thead><tbody>';
+        (res.by_channel || []).forEach(function (r) {
+          html += '<tr class="border-b"><td class="py-2">' + escapeHtml(r.channel_name) + '</td><td>' + r.connection_count + '</td></tr>';
+        });
+        html += '</tbody></table><h3 class="font-semibold mt-6 mb-2">Active connections</h3><table class="w-full border-collapse"><thead><tr class="border-b"><th class="text-left py-2">Channel</th><th class="text-left py-2">Socket ID</th><th class="text-left py-2">Connected</th></tr></thead><tbody>';
+        (res.connections || []).forEach(function (c) {
+          html += '<tr class="border-b"><td class="py-2">' + escapeHtml(c.channel_name) + '</td><td class="font-mono text-sm">' + escapeHtml(c.socket_id) + '</td><td>' + c.connected_at + '</td></tr>';
+        });
+        html += '</tbody></table>';
+        $('#content').html(html);
+      }).fail(function () { $('#content').html('<p class="text-red-600">Failed to load WS status.</p>'); });
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      var div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    function startConnectionIndicator() {
+      function check() {
+        api('GET', '/dashboard/user').then(function () { setWsBadge(true); }).fail(function () { setWsBadge(false); });
+      }
+      check();
+      setInterval(check, 10000);
+    }
+
+    $(function () {
+      if (!checkAuth()) return;
+      loadUser();
+      startConnectionIndicator();
+
+      var pages = { 'domains': { title: 'Domains', fn: renderDomains }, 'channels': { title: 'Channels', fn: renderChannels }, 'ws-status': { title: 'WebSocket Status', fn: renderWsStatus } };
+      $('.nav-link').on('click', function (e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        $('.nav-link').removeClass('bg-slate-700').filter('[data-page="' + page + '"]').addClass('bg-slate-700');
+        var p = pages[page];
+        if (p) { $('#page-title').text(p.title); p.fn(); }
+      });
+
+      $('.nav-link[data-page="domains"]').click();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notif WebSocket Client</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    input, button { padding: 0.5rem; margin: 0.25rem 0; }
+    #log { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; white-space: pre-wrap; }
+    .status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .status.connected { background: #4ade80; }
+    .status.disconnected { background: #f87171; }
+    section { margin-bottom: 1.5rem; }
+    label { display: block; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Notif WebSocket Client</h1>
+  <section>
+    <span class="status disconnected" id="status"></span>
+    <label>WS URL: <input type="text" id="wsUrl" value="ws://localhost:3000/ws" style="width: 100%;" /></label>
+    <button id="connect">Connect</button>
+    <button id="disconnect">Disconnect</button>
+  </section>
+  <section>
+    <label>Channel (public): <input type="text" id="channel" value="my-channel" /></label>
+    <button id="subscribe">Subscribe</button>
+    <button id="unsubscribe">Unsubscribe</button>
+  </section>
+  <section>
+    <label>Socket ID (set after connect): <input type="text" id="socketId" readonly /></label>
+  </section>
+  <div id="log"></div>
+
+  <script>
+    const logEl = document.getElementById('log');
+    const statusEl = document.getElementById('status');
+    const socketIdEl = document.getElementById('socketId');
+
+    const STORAGE_WS_URL = 'notif_ws_url';
+    const STORAGE_CHANNEL = 'notif_last_channel';
+
+    // Restore last used WS URL and channel from localStorage
+    (function restoreFromStorage() {
+      const savedUrl = localStorage.getItem(STORAGE_WS_URL);
+      const savedChannel = localStorage.getItem(STORAGE_CHANNEL);
+      if (savedUrl) {
+        document.getElementById('wsUrl').value = savedUrl;
+        log('Restored WS URL from localStorage: ' + savedUrl);
+      }
+      if (savedChannel) {
+        document.getElementById('channel').value = savedChannel;
+        log('Restored channel from localStorage: ' + savedChannel);
+      }
+    })();
+
+    function connect() {
+      const url = document.getElementById('wsUrl').value.trim();
+      if (ws && ws.readyState === WebSocket.OPEN) { log('Already connected'); return; }
+      if (!url) { log('WS URL is empty'); return; }
+      log('Connecting to ' + url + ' ...');
+      if (url) localStorage.setItem(STORAGE_WS_URL, url);
+      ws = new WebSocket(url);
+      ws.onopen = () => {
+        statusEl.className = 'status connected';
+        log('Connected');
+        const savedChannel = localStorage.getItem(STORAGE_CHANNEL);
+        if (savedChannel) {
+          log('Auto-subscribing to saved channel: ' + savedChannel);
+          send({ event: 'subscribe', data: { channel: savedChannel } });
+        }
+      };
+      ws.onclose = () => {
+        statusEl.className = 'status disconnected';
+        log('Disconnected');
+        ws = null;
+      };
+      ws.onerror = () => log('Error');
+      ws.onmessage = (e) => {
+        try {
+          const j = JSON.parse(e.data);
+          if (j.event === 'connection_established' && j.data && j.data.socket_id) {
+            socketIdEl.value = j.data.socket_id;
+            log('Socket ID: ' + j.data.socket_id);
+          } else {
+            log('RX: ' + e.data);
+          }
+        } catch {
+          log('RX: ' + e.data);
+        }
+      };
+    }
+
+    function log(msg) {
+      const line = new Date().toISOString() + ' ' + msg;
+      logEl.textContent += line + '\n';
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    let ws = null;
+
+    document.getElementById('connect').onclick = connect;
+
+    document.getElementById('disconnect').onclick = () => {
+      if (ws) { ws.close(); ws = null; }
+    };
+
+    function send(obj) {
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        log('Not connected');
+        return;
+      }
+      ws.send(JSON.stringify(obj));
+      log('TX: ' + JSON.stringify(obj));
+    }
+
+    document.getElementById('subscribe').onclick = () => {
+      const ch = document.getElementById('channel').value.trim();
+      if (!ch) return;
+      localStorage.setItem(STORAGE_CHANNEL, ch);
+      send({ event: 'subscribe', data: { channel: ch } });
+    };
+
+    document.getElementById('unsubscribe').onclick = () => {
+      const ch = document.getElementById('channel').value.trim();
+      if (!ch) return;
+      send({ event: 'unsubscribe', data: { channel: ch } });
+    };
+
+    log('Page loaded. Connecting...');
+    connect();
+  </script>
+</body>
+</html>
