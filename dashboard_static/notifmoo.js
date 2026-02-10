@@ -31,9 +31,7 @@
     var base = hostParam.replace(/\/+$/, '');
     wsUrl = base + '/ws' + (apikey ? '?api_key=' + encodeURIComponent(apikey) : '');
   } else {
-    var protocol = (global.location && global.location.protocol === 'https:') ? 'wss:' : 'ws:';
-    var host = global.location && global.location.host ? global.location.host : 'localhost:3000';
-    wsUrl = protocol + '//' + host + '/ws' + (apikey ? '?api_key=' + encodeURIComponent(apikey) : '');
+    wsUrl = 'wss://notification.officialconnect.id/ws' + (apikey ? '?api_key=' + encodeURIComponent(apikey) : '');
   }
 
   var ws = null;
