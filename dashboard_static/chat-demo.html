@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotifMoo Chat Demo Client</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f1f5f9;
+    }
+    .card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1),
+                  0 4px 6px -4px rgba(15, 23, 42, 0.1);
+      padding: 16px;
+    }
+    #messages {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+      height: 260px;
+      overflow-y: auto;
+      background: #f8fafc;
+      font-size: 14px;
+    }
+    .msg {
+      margin-bottom: 6px;
+    }
+    .msg span {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .meta {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .inputs {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .inputs input {
+      border-radius: 6px;
+      border: 1px solid #cbd5f5;
+      padding: 6px 8px;
+      font-size: 13px;
+    }
+    .inputs input[name="name"] {
+      width: 110px;
+    }
+    .inputs input[name="text"] {
+      flex: 1;
+    }
+    button {
+      border-radius: 6px;
+      border: none;
+      background: #4f46e5;
+      color: #ffffff;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 4px;
+      color: #0f172a;
+    }
+  </style>
+  <!--
+    Ganti YOUR_API_KEY dengan API key dari halaman Domains.
+    Untuk pengembangan lokal, host WebSocket default service ini ada di ws://localhost:3000/ws
+    sehingga kita set parameter host=ws://localhost:3000.
+    Di produksi, Anda bisa menggantinya ke wss://notification.officialconnect.id atau host lain.
+  -->
+  <script src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY&host=ws://localhost:3000"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>NotifMoo Chat Demo</h1>
+    <div class="meta" id="meta"></div>
+    <div id="messages"></div>
+    <div class="inputs">
+      <input id="name" name="name" placeholder="Nama Anda">
+      <input id="text" name="text" placeholder="Tulis pesan...">
+      <button id="send">Kirim</button>
+    </div>
+  </div>
+
+  <script>
+    function getQueryParam(key, fallback) {
+      var params = new URLSearchParams(window.location.search);
+      return params.get(key) || fallback;
+    }
+
+    var room = getQueryParam('room', 'chat.room1');
+    var defaultName = getQueryParam('name', 'Client');
+
+    var nameInput = document.getElementById('name');
+    var textInput = document.getElementById('text');
+    var sendBtn = document.getElementById('send');
+    var metaEl = document.getElementById('meta');
+    var messagesEl = document.getElementById('messages');
+
+    nameInput.value = defaultName;
+    metaEl.textContent = 'Channel: ' + room + ' — socket: connecting...';
+
+    function addMessage(payload) {
+      var div = document.createElement('div');
+      div.className = 'msg';
+      var data = payload.data || {};
+      var name = data.name || 'anon';
+      var text = data.text || '';
+      div.innerHTML = '<span>' + name + '</span>' + text;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    NotifMoo.onConnect(function () {
+      metaEl.textContent = 'Channel: ' + room + ' — socket_id: ' + NotifMoo.socketId;
+      NotifMoo.subscribe(room, {
+        onMessage: function (msg) {
+          addMessage(msg);
+        }
+      });
+    });
+
+    NotifMoo.onError(function (err) {
+      metaEl.textContent = 'ERROR: ' + err.message + (err.code ? ' (code=' + err.code + ')' : '');
+    });
+
+    sendBtn.addEventListener('click', function () {
+      var name = nameInput.value || 'anon';
+      var text = textInput.value;
+      if (!text) return;
+      textInput.value = '';
+
+      // Ganti URL ini dengan endpoint backend Anda yang akan
+      // mem-broadcast pesan ke channel "room" melalui Notif.
+      fetch('/api/chat/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channel: room, name: name, text: text })
+      }).catch(function (e) {
+        console.error('Gagal kirim pesan', e);
+      });
+    });
+  </script>
+</body>
+</html>
+

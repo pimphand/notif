@@ -63,7 +63,7 @@
 
     function renderDomains() {
       api('GET', '/dashboard/domains').then(function (list) {
-        var html = '<p class="text-slate-600 mb-4">1 domain = 1 API key. Add domain to get a key; use it for WebSocket (Origin must match domain) and broadcast.</p>';
+        var html = '<p class="text-slate-600 mb-4">1 domain = 1 API key. Add domain to get a key; use it for WebSocket (Origin must match domain) and broadcast. Untuk dokumentasi lengkap klien JavaScript &amp; contoh penggunaan CDN, lihat halaman <a href="docs.html" class="text-indigo-600 hover:underline" target="_blank" rel="noreferrer">NotifMoo Docs</a>.</p>';
         html += '<div class="space-y-4"><input type="text" id="new-domain" placeholder="example.com" class="border rounded px-3 py-2 w-64"> <button id="add-domain-btn" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add Domain</button>';
         html += '<table class="w-full border-collapse mt-4"><thead><tr class="border-b"><th class="text-left py-2">Domain</th><th class="text-left py-2">API Key</th><th class="text-left py-2">Status</th><th class="text-left py-2">Created</th><th></th></tr></thead><tbody>';
         list.forEach(function (d) {
