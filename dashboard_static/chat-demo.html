@@ -31,19 +31,52 @@
       overflow-y: auto;
       background: #f8fafc;
       font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .msg {
-      margin-bottom: 6px;
+    .msg-row {
+      display: flex;
+      margin-bottom: 4px;
     }
 
-    .msg span {
-      font-size: 11px;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+    .msg-row.msg-other {
+      justify-content: flex-start;
+    }
+
+    .msg-row.msg-me {
+      justify-content: flex-end;
+    }
+
+    .msg-bubble {
+      max-width: 80%;
+      border-radius: 12px;
+      padding: 6px 8px;
+      box-shadow: 0 1px 1px rgba(15, 23, 42, 0.08);
+      word-wrap: break-word;
+    }
+
+    .msg-row.msg-other .msg-bubble {
+      background: #ffffff;
+    }
+
+    .msg-row.msg-me .msg-bubble {
+      background: #dcfce7;
+    }
+
+    .msg-name {
+      font-size: 10px;
       font-weight: 600;
-      margin-right: 4px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+
+    .msg-text {
+      font-size: 13px;
+      color: #0f172a;
     }
 
     .meta {
@@ -135,14 +168,46 @@
     nameInput.value = defaultName;
     metaEl.textContent = 'Channel: ' + room + ' — socket: connecting...';
 
+    var recentKeys = [];
+    function isDuplicateMessage(payload) {
+      try {
+        var key = JSON.stringify(payload || {});
+        if (recentKeys.indexOf(key) !== -1) return true;
+        recentKeys.push(key);
+        if (recentKeys.length > 50) recentKeys.shift();
+        return false;
+      } catch (e) {
+        return false;
+      }
+    }
+
     function addMessage(payload) {
-      var div = document.createElement('div');
-      div.className = 'msg';
-      var data = payload.data || {};
+      if (isDuplicateMessage(payload)) return;
+
+      var data = (payload && payload.data) || {};
       var name = data.name || 'anon';
       var text = data.text || '';
-      div.innerHTML = '<span>' + name + '</span>' + text;
-      messagesEl.appendChild(div);
+
+      var row = document.createElement('div');
+      var isMe = (nameInput.value || defaultName) === name;
+      row.className = 'msg-row ' + (isMe ? 'msg-me' : 'msg-other');
+
+      var bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'msg-name';
+      nameEl.textContent = name.toUpperCase();
+
+      var textEl = document.createElement('div');
+      textEl.className = 'msg-text';
+      textEl.textContent = text;
+
+      bubble.appendChild(nameEl);
+      bubble.appendChild(textEl);
+      row.appendChild(bubble);
+
+      messagesEl.appendChild(row);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
