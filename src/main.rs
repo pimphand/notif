@@ -39,17 +39,53 @@ async fn main() -> anyhow::Result<()> {
         jwt_secret,
     };
 
-    let static_dir = tower_http::services::ServeDir::new("dashboard_static");
     let app = create_app(state)
-        // Root (/) should always serve docs.html
-        .route(
+        // Root (/) and /docs.html: serve docs.html
+        .route_service(
             "/",
             get_service(tower_http::services::ServeFile::new(
                 "dashboard_static/docs.html",
             )),
         )
-        // Other static files: /index.html, /login.html, /docs.html, etc.
-        .nest_service("/", static_dir);
+        .route_service(
+            "/docs.html",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/docs.html",
+            )),
+        )
+        // Dashboard page
+        .route_service(
+            "/index.html",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/index.html",
+            )),
+        )
+        // Auth pages
+        .route_service(
+            "/login.html",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/login.html",
+            )),
+        )
+        .route_service(
+            "/register.html",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/register.html",
+            )),
+        )
+        // Chat demo and JS client
+        .route_service(
+            "/chat-demo.html",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/chat-demo.html",
+            )),
+        )
+        .route_service(
+            "/notifmoo.js",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/notifmoo.js",
+            )),
+        );
 
     tracing::info!(addr = %config.server_addr, "listening");
     let listener = tokio::net::TcpListener::bind(config.server_addr).await?;
