@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NotifMoo JS Client Docs</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-slate-100 min-h-screen">
   <div class="max-w-6xl mx-auto py-10 px-4">
     <div class="flex gap-8 items-start">
@@ -29,305 +31,338 @@
             <p class="text-slate-600">
               Dokumentasi cara menggunakan NotifMoo via CDN untuk menerima notifikasi real‑time dari Notif.
             </p>
-            <a href="index.html" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 mt-3">
+            <a href="index.html" class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 mt-3"
+              id="back-to-dashboard">
               ← Kembali ke Dashboard
             </a>
           </div>
-          <div class="flex items-center gap-2">
-            <a href="/login.html" class="px-3 py-1.5 rounded-lg text-sm border border-slate-300 text-slate-700 hover:bg-slate-50">
+          <div class="flex items-center gap-2" id="login-register">
+            <a href="/login.html"
+              class="px-3 py-1.5 rounded-lg text-sm border border-slate-300 text-slate-700 hover:bg-slate-50">
               Login
             </a>
-            <a href="/register.html" class="px-3 py-1.5 rounded-lg text-sm bg-indigo-600 text-white hover:bg-indigo-700">
+            <a href="/register.html"
+              class="px-3 py-1.5 rounded-lg text-sm bg-indigo-600 text-white hover:bg-indigo-700">
               Register
             </a>
           </div>
         </header>
 
         <section id="cdn-setup" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">1. Menambahkan CDN</h2>
-      <p class="text-slate-700 mb-3">
-        Tambahkan skrip berikut di bagian <code>&lt;head&gt;</code> atau sebelum <code>&lt;/body&gt;</code> pada aplikasi Anda.
-        Ganti <code>YOUR_API_KEY</code> dengan API key domain yang Anda buat di Dashboard.
-      </p>
-      <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto mb-3">
-        &lt;script src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY"&gt;&lt;/script&gt;
-      </div>
-      <p class="text-slate-700">
-        Anda juga bisa menambahkan parameter opsional <code>host</code> bila ingin mengarah ke endpoint WebSocket lain:
-      </p>
-      <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto mt-3">
-        &lt;script src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY&amp;host=wss://notification.officialconnect.id"&gt;&lt;/script&gt;
-      </div>
-      <p class="text-xs text-slate-500 mt-2">
-        Catatan: Origin (domain) halaman Anda harus sama dengan domain yang terdaftar di Dashboard agar API key valid.
-      </p>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">1. Menambahkan CDN</h2>
+          <p class="text-slate-700 mb-3">
+            Tambahkan skrip berikut di bagian <code>&lt;head&gt;</code> atau sebelum <code>&lt;/body&gt;</code> pada
+            aplikasi Anda.
+            Ganti <code>YOUR_API_KEY</code> dengan API key domain yang Anda buat di Dashboard.
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto mb-3">
+            &lt;script
+            src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY"&gt;&lt;/script&gt;
+          </div>
+          <p class="text-slate-700">
+            Anda juga bisa menambahkan parameter opsional <code>host</code> bila ingin mengarah ke endpoint WebSocket
+            lain:
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto mt-3">
+            &lt;script
+            src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY&amp;host=wss://notification.officialconnect.id"&gt;&lt;/script&gt;
+          </div>
+          <p class="text-xs text-slate-500 mt-2">
+            Catatan: Origin (domain) halaman Anda harus sama dengan domain yang terdaftar di Dashboard agar API key
+            valid.
+          </p>
         </section>
 
         <section id="global-notifmoo" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">2. Objek Global <code>NotifMoo</code></h2>
-      <p class="text-slate-700 mb-3">
-        Setelah skrip CDN dimuat, library akan otomatis mencoba konek ke WebSocket dan menambahkan objek global <code>NotifMoo</code>.
-      </p>
-      <ul class="list-disc list-inside text-slate-700 space-y-1 mb-3">
-        <li><code>NotifMoo.connect()</code>: memulai koneksi (biasanya otomatis dipanggil).</li>
-        <li><code>NotifMoo.subscribe(channel, options)</code>: subscribe ke channel tertentu.</li>
-        <li><code>NotifMoo.unsubscribe(channel)</code>: unsubscribe dari channel.</li>
-        <li><code>NotifMoo.bind(event, callback)</code>: listen event global tertentu.</li>
-        <li><code>NotifMoo.onConnect(callback)</code>: dipanggil ketika koneksi berhasil.</li>
-        <li><code>NotifMoo.onError(callback)</code>: menangkap error koneksi.</li>
-      </ul>
-      <p class="text-slate-700">
-        Library ini mirip dengan client Pusher: setiap pesan memiliki <code>event</code>, <code>channel</code>, dan <code>data</code>.
-      </p>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">2. Objek Global <code>NotifMoo</code></h2>
+          <p class="text-slate-700 mb-3">
+            Setelah skrip CDN dimuat, library akan otomatis mencoba konek ke WebSocket dan menambahkan objek global
+            <code>NotifMoo</code>.
+          </p>
+          <ul class="list-disc list-inside text-slate-700 space-y-1 mb-3">
+            <li><code>NotifMoo.connect()</code>: memulai koneksi (biasanya otomatis dipanggil).</li>
+            <li><code>NotifMoo.subscribe(channel, options)</code>: subscribe ke channel tertentu.</li>
+            <li><code>NotifMoo.unsubscribe(channel)</code>: unsubscribe dari channel.</li>
+            <li><code>NotifMoo.bind(event, callback)</code>: listen event global tertentu.</li>
+            <li><code>NotifMoo.onConnect(callback)</code>: dipanggil ketika koneksi berhasil.</li>
+            <li><code>NotifMoo.onError(callback)</code>: menangkap error koneksi.</li>
+          </ul>
+          <p class="text-slate-700">
+            Library ini mirip dengan client Pusher: setiap pesan memiliki <code>event</code>, <code>channel</code>, dan
+            <code>data</code>.
+          </p>
         </section>
 
         <section id="basic-example" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">3. Contoh Sederhana</h2>
-      <p class="text-slate-700 mb-3">
-        Contoh halaman HTML lengkap yang subscribe ke channel publik dan menampilkan pesan yang diterima.
-      </p>
-      <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto">
-        &lt;!DOCTYPE html&gt;<br>
-        &lt;html lang="en"&gt;<br>
-        &lt;head&gt;<br>
-        &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
-        &nbsp;&nbsp;&lt;title&gt;NotifMoo Demo&lt;/title&gt;<br>
-        &nbsp;&nbsp;&lt;script src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY"&gt;&lt;/script&gt;<br>
-        &lt;/head&gt;<br>
-        &lt;body&gt;<br>
-        &nbsp;&nbsp;&lt;h1&gt;NotifMoo Demo&lt;/h1&gt;<br>
-        &nbsp;&nbsp;&lt;pre id="log"&gt;&lt;/pre&gt;<br>
-        <br>
-        &nbsp;&nbsp;&lt;script&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;function log(line) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('log').textContent += line + '\n';<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onConnect(function () {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log('Connected! socket_id=' + NotifMoo.socketId);<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Subscribe ke channel, misalnya "public-demo"<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.subscribe('public-demo', {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onMessage: function (msg) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log('[channel=' + msg.channel + '] event=' + msg.event + ' data=' + JSON.stringify(msg.data));<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onError(function (err) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log('ERROR: ' + err.message + (err.code ? ' (code=' + err.code + ')' : ''));<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;&lt;/script&gt;<br>
-        &lt;/body&gt;<br>
-        &lt;/html&gt;<br>
-      </div>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">3. Contoh Sederhana</h2>
+          <p class="text-slate-700 mb-3">
+            Contoh halaman HTML lengkap yang subscribe ke channel publik dan menampilkan pesan yang diterima.
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto">
+            &lt;!DOCTYPE html&gt;<br>
+            &lt;html lang="en"&gt;<br>
+            &lt;head&gt;<br>
+            &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
+            &nbsp;&nbsp;&lt;title&gt;NotifMoo Demo&lt;/title&gt;<br>
+            &nbsp;&nbsp;&lt;script
+            src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY"&gt;&lt;/script&gt;<br>
+            &lt;/head&gt;<br>
+            &lt;body&gt;<br>
+            &nbsp;&nbsp;&lt;h1&gt;NotifMoo Demo&lt;/h1&gt;<br>
+            &nbsp;&nbsp;&lt;pre id="log"&gt;&lt;/pre&gt;<br>
+            <br>
+            &nbsp;&nbsp;&lt;script&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;function log(line) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('log').textContent += line + '\n';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onConnect(function () {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log('Connected! socket_id=' + NotifMoo.socketId);<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Subscribe ke channel, misalnya "public-demo"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.subscribe('public-demo', {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onMessage: function (msg) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log('[channel=' + msg.channel + '] event=' +
+            msg.event + ' data=' + JSON.stringify(msg.data));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onError(function (err) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;log('ERROR: ' + err.message + (err.code ? ' (code=' + err.code + ')' :
+            ''));<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&lt;/script&gt;<br>
+            &lt;/body&gt;<br>
+            &lt;/html&gt;<br>
+          </div>
         </section>
 
         <section id="per-user" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">4. Contoh dengan Channel Per‑User</h2>
-      <p class="text-slate-700 mb-3">
-        Misalkan backend Anda mengirim notifikasi ke channel seperti <code>user.123</code> (123 = ID user).
-        Berikut contoh cara subscribe dari frontend:
-      </p>
-      <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto">
-        // Misal Anda sudah tahu userId dari session / blade / JS<br>
-        const userId = 123;<br>
-        const channelName = `user.${userId}`;<br>
-        <br>
-        NotifMoo.onConnect(function () {<br>
-        &nbsp;&nbsp;NotifMoo.subscribe(channelName, {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;onMessage: function (msg) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('New notification for user', msg);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        &nbsp;&nbsp;});<br>
-        });<br>
-      </div>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">4. Contoh dengan Channel Per‑User</h2>
+          <p class="text-slate-700 mb-3">
+            Misalkan backend Anda mengirim notifikasi ke channel seperti <code>user.123</code> (123 = ID user).
+            Berikut contoh cara subscribe dari frontend:
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto">
+            // Misal Anda sudah tahu userId dari session / blade / JS<br>
+            const userId = 123;<br>
+            const channelName = `user.${userId}`;<br>
+            <br>
+            NotifMoo.onConnect(function () {<br>
+            &nbsp;&nbsp;NotifMoo.subscribe(channelName, {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;onMessage: function (msg) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('New notification for user', msg);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;});<br>
+            });<br>
+          </div>
         </section>
 
         <section id="global-events" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">5. Event Global</h2>
-      <p class="text-slate-700 mb-3">
-        Selain <code>onMessage</code> per‑channel, Anda bisa menangkap semua event yang masuk dengan event global:
-      </p>
-      <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto">
-        // Semua event (debugging)<br>
-        NotifMoo.bind('*', function (payload) {<br>
-        &nbsp;&nbsp;console.log('EVENT', payload.event, 'CHANNEL', payload.channel, 'DATA', payload.data);<br>
-        });<br>
-        <br>
-        // Event khusus, misalnya "order.updated"<br>
-        NotifMoo.bind('order.updated', function (payload) {<br>
-        &nbsp;&nbsp;console.log('Order updated:', payload.data);<br>
-        });<br>
-      </div>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">5. Event Global</h2>
+          <p class="text-slate-700 mb-3">
+            Selain <code>onMessage</code> per‑channel, Anda bisa menangkap semua event yang masuk dengan event global:
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-sm font-mono overflow-x-auto">
+            // Semua event (debugging)<br>
+            NotifMoo.bind('*', function (payload) {<br>
+            &nbsp;&nbsp;console.log('EVENT', payload.event, 'CHANNEL', payload.channel, 'DATA', payload.data);<br>
+            });<br>
+            <br>
+            // Event khusus, misalnya "order.updated"<br>
+            NotifMoo.bind('order.updated', function (payload) {<br>
+            &nbsp;&nbsp;console.log('Order updated:', payload.data);<br>
+            });<br>
+          </div>
         </section>
 
         <section id="chat-example" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">6. Contoh Aplikasi Chat Sederhana</h2>
-      <p class="text-slate-700 mb-3">
-        Contoh berikut adalah versi sederhana dari file demo <code>chat-demo.html</code>: tampilan bubble mirip WhatsApp,
-        subscribe ke satu channel, dan mengirim pesan menggunakan HTTP API <code>POST /api/broadcast</code>.
-      </p>
-      <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto mb-3">
-        &lt;!DOCTYPE html&gt;<br>
-        &lt;html lang="en"&gt;<br>
-        &lt;head&gt;<br>
-        &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
-        &nbsp;&nbsp;&lt;title&gt;NotifMoo Chat Demo&lt;/title&gt;<br>
-        &nbsp;&nbsp;&lt;style&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; background: #f1f5f9; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.card { max-width: 480px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(15,23,42,0.1), 0 4px 6px -4px rgba(15,23,42,0.1); padding: 16px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;#messages { border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; height: 260px; overflow-y: auto; background: #f8fafc; font-size: 14px; display: flex; flex-direction: column; gap: 4px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-row { display: flex; margin-bottom: 4px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-other { justify-content: flex-start; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-me { justify-content: flex-end; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-bubble { max-width: 80%; border-radius: 12px; padding: 6px 8px; box-shadow: 0 1px 1px rgba(15,23,42,0.08); word-wrap: break-word; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-other .msg-bubble { background: #ffffff; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-me .msg-bubble { background: #dcfce7; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-name { font-size: 10px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #64748b; margin-bottom: 2px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.msg-text { font-size: 13px; color: #0f172a; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.inputs { display: flex; gap: 6px; margin-top: 8px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.inputs input { border-radius: 6px; border: 1px solid #cbd5f5; padding: 6px 8px; font-size: 13px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.inputs input[name="name"] { width: 110px; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;.inputs input[name="text"] { flex: 1; }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;button { border-radius: 6px; border: none; background: #4f46e5; color: #fff; padding: 6px 10px; font-size: 13px; cursor: pointer; white-space: nowrap; }<br>
-        &nbsp;&nbsp;&lt;/style&gt;<br>
-        &nbsp;&nbsp;&lt;!-- Ganti YOUR_API_KEY dengan API key domain Anda --&gt;<br>
-        &nbsp;&nbsp;&lt;script src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY"&gt;&lt;/script&gt;<br>
-        &lt;/head&gt;<br>
-        &lt;body&gt;<br>
-        &nbsp;&nbsp;&lt;div class="card"&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;NotifMoo Chat Demo&lt;/h1&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="meta" id="meta" style="font-size:11px;color:#94a3b8;margin-bottom:6px;"&gt;&lt;/div&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;div id="messages"&gt;&lt;/div&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="inputs"&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input id="name" name="name" placeholder="Nama Anda" /&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input id="text" name="text" placeholder="Tulis pesan..." /&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button id="send"&gt;Kirim&lt;/button&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
-        &nbsp;&nbsp;&lt;/div&gt;<br>
-        <br>
-        &nbsp;&nbsp;&lt;script&gt;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;function getQueryParam(key, fallback) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const params = new URLSearchParams(window.location.search);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return params.get(key) || fallback;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const room = getQueryParam('room', 'chat.room1');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const defaultName = getQueryParam('name', 'Client');<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const nameInput = document.getElementById('name');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const textInput = document.getElementById('text');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const sendBtn = document.getElementById('send');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const metaEl = document.getElementById('meta');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const messagesEl = document.getElementById('messages');<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;nameInput.value = defaultName;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'Channel: ' + room + ' — socket: connecting...';<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;const recentKeys = [];<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;function isDuplicateMessage(payload) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const key = JSON.stringify(payload || {});<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (recentKeys.indexOf(key) !== -1) return true;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recentKeys.push(key);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (recentKeys.length &gt; 50) recentKeys.shift();<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (e) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;function addMessage(payload) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isDuplicateMessage(payload)) return;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const data = (payload &amp;&amp; payload.data) || {};<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const name = data.name || 'anon';<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const text = data.text || '';<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const row = document.createElement('div');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const isMe = (nameInput.value || defaultName) === name;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;row.className = 'msg-row ' + (isMe ? 'msg-me' : 'msg-other');<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const bubble = document.createElement('div');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bubble.className = 'msg-bubble';<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const nameEl = document.createElement('div');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nameEl.className = 'msg-name';<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nameEl.textContent = name.toUpperCase();<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const textEl = document.createElement('div');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textEl.className = 'msg-text';<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textEl.textContent = text;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bubble.appendChild(nameEl);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bubble.appendChild(textEl);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;row.appendChild(bubble);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messagesEl.appendChild(row);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messagesEl.scrollTop = messagesEl.scrollHeight;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onConnect(function () {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'Channel: ' + room + ' — connected, menunggu socket_id...';<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.subscribe(room, {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onMessage: function (msg) { addMessage(msg); }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.bind('connection_established', function (payload) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!payload || !payload.socket_id) return;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'Channel: ' + room + ' — socket_id: ' + payload.socket_id;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onError(function (err) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'ERROR: ' + err.message + (err.code ? ' (code=' + err.code + ')' : '');<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;sendBtn.addEventListener('click', function () {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const name = nameInput.value || 'anon';<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const text = textInput.value;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!text) return;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textInput.value = '';<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Kirim pesan via HTTP API resmi Notif (POST /api/broadcast)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch('https://notification.officialconnect.id/api/broadcast', {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': 'application/json',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'x-app-key': 'YOUR_APP_KEY'<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: JSON.stringify({<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;channel: room,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event: 'chat.message',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data: { name, text }<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).catch(function (e) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('Gagal kirim pesan', e);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;&lt;/script&gt;<br>
-        &lt;/body&gt;<br>
-        &lt;/html&gt;<br>
-      </div>
-      <p class="text-xs text-slate-500">
-        Ganti <code>YOUR_API_KEY</code> dan <code>YOUR_APP_KEY</code> dengan kredensial dari Dashboard. Untuk demo penuh yang
-        bisa membuka dua jendela sekaligus dengan channel acak, gunakan tombol di bagian berikutnya (Demo Cepat).
-      </p>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">6. Contoh Aplikasi Chat Sederhana</h2>
+          <p class="text-slate-700 mb-3">
+            Contoh berikut adalah versi sederhana dari file demo <code>chat-demo.html</code>: tampilan bubble mirip
+            WhatsApp,
+            subscribe ke satu channel, dan mengirim pesan menggunakan HTTP API <code>POST /api/broadcast</code>.
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto mb-3">
+            &lt;!DOCTYPE html&gt;<br>
+            &lt;html lang="en"&gt;<br>
+            &lt;head&gt;<br>
+            &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
+            &nbsp;&nbsp;&lt;title&gt;NotifMoo Chat Demo&lt;/title&gt;<br>
+            &nbsp;&nbsp;&lt;style&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; background:
+            #f1f5f9; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.card { max-width: 480px; margin: 0 auto; background: #fff; border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(15,23,42,0.1), 0 4px 6px -4px rgba(15,23,42,0.1); padding: 16px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;#messages { border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; height:
+            260px; overflow-y: auto; background: #f8fafc; font-size: 14px; display: flex; flex-direction: column; gap:
+            4px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-row { display: flex; margin-bottom: 4px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-other { justify-content: flex-start; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-me { justify-content: flex-end; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-bubble { max-width: 80%; border-radius: 12px; padding: 6px 8px; box-shadow: 0
+            1px 1px rgba(15,23,42,0.08); word-wrap: break-word; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-other .msg-bubble { background: #ffffff; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-row.msg-me .msg-bubble { background: #dcfce7; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-name { font-size: 10px; font-weight: 600; letter-spacing: 0.03em;
+            text-transform: uppercase; color: #64748b; margin-bottom: 2px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.msg-text { font-size: 13px; color: #0f172a; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.inputs { display: flex; gap: 6px; margin-top: 8px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.inputs input { border-radius: 6px; border: 1px solid #cbd5f5; padding: 6px 8px;
+            font-size: 13px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.inputs input[name="name"] { width: 110px; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;.inputs input[name="text"] { flex: 1; }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;button { border-radius: 6px; border: none; background: #4f46e5; color: #fff;
+            padding: 6px 10px; font-size: 13px; cursor: pointer; white-space: nowrap; }<br>
+            &nbsp;&nbsp;&lt;/style&gt;<br>
+            &nbsp;&nbsp;&lt;!-- Ganti YOUR_API_KEY dengan API key domain Anda --&gt;<br>
+            &nbsp;&nbsp;&lt;script
+            src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=YOUR_API_KEY"&gt;&lt;/script&gt;<br>
+            &lt;/head&gt;<br>
+            &lt;body&gt;<br>
+            &nbsp;&nbsp;&lt;div class="card"&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;NotifMoo Chat Demo&lt;/h1&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="meta" id="meta"
+            style="font-size:11px;color:#94a3b8;margin-bottom:6px;"&gt;&lt;/div&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;div id="messages"&gt;&lt;/div&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="inputs"&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input id="name" name="name" placeholder="Nama Anda" /&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input id="text" name="text" placeholder="Tulis pesan..." /&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button id="send"&gt;Kirim&lt;/button&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+            &nbsp;&nbsp;&lt;/div&gt;<br>
+            <br>
+            &nbsp;&nbsp;&lt;script&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;function getQueryParam(key, fallback) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const params = new URLSearchParams(window.location.search);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return params.get(key) || fallback;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const room = getQueryParam('room', 'chat.room1');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const defaultName = getQueryParam('name', 'Client');<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const nameInput = document.getElementById('name');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const textInput = document.getElementById('text');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const sendBtn = document.getElementById('send');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const metaEl = document.getElementById('meta');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const messagesEl = document.getElementById('messages');<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;nameInput.value = defaultName;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'Channel: ' + room + ' — socket: connecting...';<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const recentKeys = [];<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;function isDuplicateMessage(payload) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const key = JSON.stringify(payload || {});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (recentKeys.indexOf(key) !== -1) return true;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recentKeys.push(key);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (recentKeys.length &gt; 50) recentKeys.shift();<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} catch (e) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;function addMessage(payload) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (isDuplicateMessage(payload)) return;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const data = (payload &amp;&amp; payload.data) || {};<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const name = data.name || 'anon';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const text = data.text || '';<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const row = document.createElement('div');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const isMe = (nameInput.value || defaultName) === name;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;row.className = 'msg-row ' + (isMe ? 'msg-me' : 'msg-other');<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const bubble = document.createElement('div');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bubble.className = 'msg-bubble';<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const nameEl = document.createElement('div');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nameEl.className = 'msg-name';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nameEl.textContent = name.toUpperCase();<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const textEl = document.createElement('div');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textEl.className = 'msg-text';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textEl.textContent = text;<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bubble.appendChild(nameEl);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bubble.appendChild(textEl);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;row.appendChild(bubble);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messagesEl.appendChild(row);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;messagesEl.scrollTop = messagesEl.scrollHeight;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onConnect(function () {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'Channel: ' + room + ' — connected, menunggu
+            socket_id...';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.subscribe(room, {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onMessage: function (msg) { addMessage(msg); }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.bind('connection_established', function (payload) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!payload || !payload.socket_id) return;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'Channel: ' + room + ' — socket_id: ' +
+            payload.socket_id;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;NotifMoo.onError(function (err) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metaEl.textContent = 'ERROR: ' + err.message + (err.code ? ' (code=' +
+            err.code + ')' : '');<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;sendBtn.addEventListener('click', function () {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const name = nameInput.value || 'anon';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const text = textInput.value;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!text) return;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textInput.value = '';<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Kirim pesan via HTTP API resmi Notif (POST /api/broadcast)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch('https://notification.officialconnect.id/api/broadcast', {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': 'application/json',<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'x-app-key': 'YOUR_APP_KEY'<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body: JSON.stringify({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;channel: room,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event: 'chat.message',<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data: { name, text }<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).catch(function (e) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('Gagal kirim pesan', e);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+            &nbsp;&nbsp;&lt;/script&gt;<br>
+            &lt;/body&gt;<br>
+            &lt;/html&gt;<br>
+          </div>
+          <p class="text-xs text-slate-500">
+            Ganti <code>YOUR_API_KEY</code> dan <code>YOUR_APP_KEY</code> dengan kredensial dari Dashboard. Untuk demo
+            penuh yang
+            bisa membuka dua jendela sekaligus dengan channel acak, gunakan tombol di bagian berikutnya (Demo Cepat).
+          </p>
         </section>
 
         <section id="chat-demo" class="mb-10">
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">7. Demo Cepat: Buka 2 Jendela Chat</h2>
-      <p class="text-slate-700 mb-3">
-        Untuk mencoba dua client chat sekaligus, klik tombol di bawah ini. Halaman akan membuka dua jendela baru:
-        masing‑masing menggunakan nama berbeda (<code>Chat 1</code> dan <code>Chat 2</code>) pada satu channel yang sama,
-        tetapi nama channel tersebut dibuat acak setiap kali tombol diklik sehingga sesi Anda terisolasi dari pengguna lain.
-      </p>
-      <button id="open-two-chat" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded">
-        Buka 2 jendela chat demo
-      </button>
-      <p class="text-xs text-slate-500 mt-2">
-        File yang dipakai: <code>chat-demo.html</code>. Parameter query <code>?name=Chat+1</code> dan <code>?name=Chat+2</code>
-        hanya mengisi nama default di input, sedangkan parameter <code>?room=chat.demo.&lt;random&gt;</code> dibuat acak setiap klik.
-      </p>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">7. Demo Cepat: Buka 2 Jendela Chat</h2>
+          <p class="text-slate-700 mb-3">
+            Untuk mencoba dua client chat sekaligus, klik tombol di bawah ini. Halaman akan membuka dua jendela baru:
+            masing‑masing menggunakan nama berbeda (<code>Chat 1</code> dan <code>Chat 2</code>) pada satu channel yang
+            sama,
+            tetapi nama channel tersebut dibuat acak setiap kali tombol diklik sehingga sesi Anda terisolasi dari
+            pengguna lain.
+          </p>
+          <button id="open-two-chat"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded">
+            Buka 2 jendela chat demo
+          </button>
+          <p class="text-xs text-slate-500 mt-2">
+            File yang dipakai: <code>chat-demo.html</code>. Parameter query <code>?name=Chat+1</code> dan
+            <code>?name=Chat+2</code>
+            hanya mengisi nama default di input, sedangkan parameter <code>?room=chat.demo.&lt;random&gt;</code> dibuat
+            acak setiap klik.
+          </p>
         </section>
 
         <footer class="border-t border-slate-200 pt-4 mt-8 text-xs text-slate-500">
@@ -349,6 +384,14 @@
         window.open(base + '&name=' + encodeURIComponent('Chat 2'), 'notif-chat-2', 'width=520,height=700,left=540');
       });
     })();
+
+    function token() { return localStorage.getItem('notif_token'); }
+    if (token()) {
+      document.getElementById('login-register').style.display = 'none';
+    } else {
+      document.getElementById('back-to-dashboard').style.display = 'none';
+    }
   </script>
 </body>
+
 </html>
