@@ -85,6 +85,13 @@
       margin-bottom: 6px;
     }
 
+    .typing {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+      min-height: 14px;
+    }
+
     .inputs {
       display: flex;
       gap: 6px;
@@ -152,6 +159,7 @@
       <input id="text" name="text" placeholder="Tulis pesan...">
       <button id="send">Kirim</button>
     </div>
+    <div class="typing" id="typing-indicator" style="display: none;"></div>
   </div>
 
   <script>
@@ -168,6 +176,7 @@
     var sendBtn = document.getElementById('send');
     var metaEl = document.getElementById('meta');
     var messagesEl = document.getElementById('messages');
+    var typingIndicator = document.getElementById('typing-indicator');
 
     nameInput.value = defaultName;
     metaEl.textContent = 'Channel: ' + room + ' — socket: connecting...';
@@ -215,12 +224,41 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+    var typingTimeoutId = null;
+    function handleTyping(payload) {
+      var data = (payload && payload.data) || {};
+      var name = data.name || 'anon';
+
+      // Jangan tampilkan indikator untuk diri sendiri
+      if ((nameInput.value || defaultName) === name) {
+        return;
+      }
+
+      typingIndicator.textContent = name + ' sedang mengetik...';
+      typingIndicator.style.display = 'block';
+
+      if (typingTimeoutId) {
+        clearTimeout(typingTimeoutId);
+      }
+      typingTimeoutId = setTimeout(function () {
+        typingIndicator.style.display = 'none';
+        typingIndicator.textContent = '';
+      }, 2000);
+    }
+
     // Saat WebSocket sudah buka (tapi belum tentu ada socket_id)
     NotifMoo.onConnect(function () {
       metaEl.textContent = 'Channel: ' + room + ' — connected, menunggu socket_id...';
       NotifMoo.subscribe(room, {
         onMessage: function (msg) {
-          addMessage(msg);
+          if (!msg || !msg.event) {
+            return;
+          }
+          if (msg.event === 'chat.message') {
+            addMessage(msg);
+          } else if (msg.event === 'chat.typing') {
+            handleTyping(msg);
+          }
         }
       });
     });
@@ -256,6 +294,38 @@
         })
       }).catch(function (e) {
         console.error('Gagal kirim pesan', e);
+      });
+    });
+
+    // Kirim event "sedang mengetik" ketika user mengetik
+    var lastTypingSentAt = 0;
+    textInput.addEventListener('input', function () {
+      var text = textInput.value;
+      if (!text) {
+        return;
+      }
+
+      var now = Date.now();
+      // throttle supaya tidak spam ke server
+      if (now - lastTypingSentAt < 1500) {
+        return;
+      }
+      lastTypingSentAt = now;
+
+      var name = nameInput.value || 'anon';
+      fetch('/api/broadcast', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-app-key': 'nk_ef43496d91cc4b52b08a00ae51fde04a'
+        },
+        body: JSON.stringify({
+          channel: room,
+          event: 'chat.typing',
+          data: { name: name }
+        })
+      }).catch(function (e) {
+        console.error('Gagal kirim typing', e);
       });
     });
   </script>
