@@ -134,6 +134,33 @@
       margin: 0 0 4px;
       color: #0f172a;
     }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 12px;
+      }
+
+      #messages {
+        height: 220px;
+      }
+
+      .inputs {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .inputs input[name="name"],
+      .inputs input[name="text"],
+      button {
+        width: 100%;
+      }
+    }
   </style>
   <!--
     Ganti API key di bawah dengan API key dari halaman Domains.
