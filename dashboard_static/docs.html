@@ -21,7 +21,8 @@
           <a href="#global-events" class="block text-slate-700 hover:text-indigo-600">5. Event Global</a>
           <a href="#chat-example" class="block text-slate-700 hover:text-indigo-600">6. Contoh Chat</a>
           <a href="#chat-demo" class="block text-slate-700 hover:text-indigo-600">7. Demo Chat 2 Jendela</a>
-          <a href="#backend-curl" class="block text-slate-700 hover:text-indigo-600">8. Penggunaan dari Backend (cURL)</a>
+          <a href="#backend-curl" class="block text-slate-700 hover:text-indigo-600">8. Penggunaan dari Backend
+            (cURL)</a>
         </nav>
       </aside>
 
@@ -319,7 +320,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textInput.value = '';<br>
             <br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Kirim pesan via HTTP API resmi Notif (POST /api/broadcast)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch('https://notification.officialconnect.id/api/broadcast', {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch('https://notifmoo.dmpt.my.id/api/broadcast', {<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;headers: {<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'Content-Type': 'application/json',<br>
@@ -367,16 +368,18 @@
         </section>
 
         <section id="backend-curl" class="mb-10">
-          <h2 class="text-xl font-semibold text-slate-900 mb-3">8. Mengirim Event dari Backend dengan <code>curl</code></h2>
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">8. Mengirim Event dari Backend dengan <code>curl</code>
+          </h2>
           <p class="text-slate-700 mb-3">
-            Selain dari frontend, Anda bisa mem-publish event ke channel Notif langsung dari backend menggunakan HTTP API
+            Selain dari frontend, Anda bisa mem-publish event ke channel Notif langsung dari backend menggunakan HTTP
+            API
             <code>POST /api/broadcast</code>. Contoh di bawah ini menggunakan <code>curl</code> (bisa diadaptasi ke
             bahasa backend apa pun).
           </p>
 
           <h3 class="text-sm font-semibold text-slate-800 mb-2">8.1. Contoh kirim ke channel publik</h3>
           <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto mb-3">
-            curl -X POST "https://notification.officialconnect.id/api/broadcast" \<br>
+            curl -X POST "https://notifmoo.dmpt.my.id/api/broadcast" \<br>
             &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
             &nbsp;&nbsp;-H "x-app-key: YOUR_APP_KEY" \<br>
             &nbsp;&nbsp;-d '{<br>
@@ -391,7 +394,7 @@
             Misal backend Anda mengirim ke channel <code>user.123</code> (ID user = 123):
           </p>
           <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto mb-3">
-            curl -X POST "https://notification.officialconnect.id/api/broadcast" \<br>
+            curl -X POST "https://notifmoo.dmpt.my.id/api/broadcast" \<br>
             &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
             &nbsp;&nbsp;-H "x-app-key: YOUR_APP_KEY" \<br>
             &nbsp;&nbsp;-d '{<br>
