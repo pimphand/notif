@@ -21,6 +21,7 @@
           <a href="#global-events" class="block text-slate-700 hover:text-indigo-600">5. Event Global</a>
           <a href="#chat-example" class="block text-slate-700 hover:text-indigo-600">6. Contoh Chat</a>
           <a href="#chat-demo" class="block text-slate-700 hover:text-indigo-600">7. Demo Chat 2 Jendela</a>
+          <a href="#backend-curl" class="block text-slate-700 hover:text-indigo-600">8. Penggunaan dari Backend (cURL)</a>
         </nav>
       </aside>
 
@@ -362,6 +363,47 @@
             <code>?name=Chat+2</code>
             hanya mengisi nama default di input, sedangkan parameter <code>?room=chat.demo.&lt;random&gt;</code> dibuat
             acak setiap klik.
+          </p>
+        </section>
+
+        <section id="backend-curl" class="mb-10">
+          <h2 class="text-xl font-semibold text-slate-900 mb-3">8. Mengirim Event dari Backend dengan <code>curl</code></h2>
+          <p class="text-slate-700 mb-3">
+            Selain dari frontend, Anda bisa mem-publish event ke channel Notif langsung dari backend menggunakan HTTP API
+            <code>POST /api/broadcast</code>. Contoh di bawah ini menggunakan <code>curl</code> (bisa diadaptasi ke
+            bahasa backend apa pun).
+          </p>
+
+          <h3 class="text-sm font-semibold text-slate-800 mb-2">8.1. Contoh kirim ke channel publik</h3>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto mb-3">
+            curl -X POST "https://notification.officialconnect.id/api/broadcast" \<br>
+            &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+            &nbsp;&nbsp;-H "x-app-key: YOUR_APP_KEY" \<br>
+            &nbsp;&nbsp;-d '{<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"channel": "public-demo",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"event": "demo.notification",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"data": { "message": "Hello from backend" }<br>
+            &nbsp;&nbsp;}'<br>
+          </div>
+
+          <h3 class="text-sm font-semibold text-slate-800 mb-2">8.2. Contoh kirim ke channel per-user</h3>
+          <p class="text-slate-700 mb-2">
+            Misal backend Anda mengirim ke channel <code>user.123</code> (ID user = 123):
+          </p>
+          <div class="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs font-mono overflow-x-auto mb-3">
+            curl -X POST "https://notification.officialconnect.id/api/broadcast" \<br>
+            &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+            &nbsp;&nbsp;-H "x-app-key: YOUR_APP_KEY" \<br>
+            &nbsp;&nbsp;-d '{<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"channel": "user.123",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"event": "user.notification",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;"data": { "title": "Halo", "body": "Notifikasi dari backend" }<br>
+            &nbsp;&nbsp;}'<br>
+          </div>
+
+          <p class="text-xs text-slate-500">
+            Ganti <code>YOUR_APP_KEY</code> dengan App Key dari halaman Domains di Dashboard. Struktur body JSON sama
+            seperti ketika Anda memanggil endpoint ini dari JavaScript.
           </p>
         </section>
 
