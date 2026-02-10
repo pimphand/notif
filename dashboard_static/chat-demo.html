@@ -146,13 +146,20 @@
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
+    // Saat WebSocket sudah buka (tapi belum tentu ada socket_id)
     NotifMoo.onConnect(function () {
-      metaEl.textContent = 'Channel: ' + room + ' — socket_id: ' + NotifMoo.socketId;
+      metaEl.textContent = 'Channel: ' + room + ' — connected, menunggu socket_id...';
       NotifMoo.subscribe(room, {
         onMessage: function (msg) {
           addMessage(msg);
         }
       });
+    });
+
+    // Ketika server mengirim event connection_established, kita update socket_id yang sebenarnya
+    NotifMoo.bind('connection_established', function (payload) {
+      if (!payload || !payload.socket_id) return;
+      metaEl.textContent = 'Channel: ' + room + ' — socket_id: ' + payload.socket_id;
     });
 
     NotifMoo.onError(function (err) {
