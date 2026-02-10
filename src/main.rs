@@ -1,5 +1,6 @@
 //! Entry point: load config, wire dependencies, and run the server.
 
+use axum::routing::get_service;
 use notif::config::Config;
 use notif::db;
 use notif::repositories::RedisRepository;
@@ -38,12 +39,17 @@ async fn main() -> anyhow::Result<()> {
         jwt_secret,
     };
 
-    let app = create_app(state).nest_service(
-        "/",
-        tower_http::services::ServeDir::new("dashboard_static").fallback(
-            tower_http::services::ServeFile::new("dashboard_static/index.html"),
-        ),
-    );
+    let static_dir = tower_http::services::ServeDir::new("dashboard_static");
+    let app = create_app(state)
+        // Root (/) should always serve docs.html
+        .route(
+            "/",
+            get_service(tower_http::services::ServeFile::new(
+                "dashboard_static/docs.html",
+            )),
+        )
+        // Other static files: /index.html, /login.html, /docs.html, etc.
+        .nest_service("/", static_dir);
 
     tracing::info!(addr = %config.server_addr, "listening");
     let listener = tokio::net::TcpListener::bind(config.server_addr).await?;
