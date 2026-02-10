@@ -172,11 +172,18 @@
       if (!text) return;
       textInput.value = '';
 
-      // Endpoint untuk mengirim pesan chat (akan di-broadcast ke channel "room")
-      fetch('https://notification.officialconnect.id/api/chat/send', {
+      // Endpoint resmi Notif untuk broadcast ke channel WebSocket
+      fetch('https://notification.officialconnect.id/api/broadcast', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channel: room, name: name, text: text })
+        headers: {
+          'Content-Type': 'application/json',
+          'x-app-key': 'nk_a34c07f1a78e40afaf1d2b0113ff9489'
+        },
+        body: JSON.stringify({
+          channel: room,
+          event: 'chat.message',
+          data: { name: name, text: text }
+        })
       }).catch(function (e) {
         console.error('Gagal kirim pesan', e);
       });
