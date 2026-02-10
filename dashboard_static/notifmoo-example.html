@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NotifMoo.js example</title>
+  <title>Contoh NotifMoo.js</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
     #log { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; height: 200px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; }
@@ -14,7 +14,7 @@
 <body>
   <h1>NotifMoo.js</h1>
   <p><span class="status disconnected" id="status"></span> <span id="state">-</span> <span id="sid"></span></p>
-  <p>Subscribe to channel: <input type="text" id="channel" value="my-channel" /> <button id="sub">Subscribe</button> <button id="unsub">Unsubscribe</button></p>
+  <p>Subscribe ke channel: <input type="text" id="channel" value="my-channel" /> <button id="sub">Subscribe</button> <button id="unsub">Unsubscribe</button></p>
   <div id="log"></div>
 
   <!-- Ganti YOUR_API_KEY dengan API key dari dashboard (domain key). -->
@@ -34,7 +34,7 @@
       statusEl.className = 'status connected';
       stateEl.textContent = NotifMoo.readyState;
       sidEl.textContent = 'Socket: ' + (NotifMoo.socketId || '-');
-      log('Connected, socket_id: ' + NotifMoo.socketId);
+      log('Terhubung, socket_id: ' + NotifMoo.socketId);
     });
 
     if (NotifMoo.readyState === 'connected') {
@@ -44,7 +44,7 @@
 
     NotifMoo.bind('*', function (p) {
       if (p.event !== 'connection_established' && p.event !== 'pusher_internal:subscription_succeeded')
-        log('Event: ' + p.event + ' on ' + p.channel + ' -> ' + JSON.stringify(p.data));
+        log('Event: ' + p.event + ' di ' + p.channel + ' -> ' + JSON.stringify(p.data));
     });
 
     NotifMoo.onError(function (err) {
@@ -59,17 +59,17 @@
           log('[' + ch + '] ' + p.event + ': ' + JSON.stringify(p.data));
         }
       });
-      log('Subscribed to ' + ch);
+      log('Subscribe ke ' + ch);
     };
 
     document.getElementById('unsub').onclick = function () {
       var ch = document.getElementById('channel').value.trim();
       if (!ch) return;
       NotifMoo.unsubscribe(ch);
-      log('Unsubscribed from ' + ch);
+      log('Berhenti subscribe dari ' + ch);
     };
 
-    log('NotifMoo loaded. apikey: ' + (NotifMoo.apikey ? 'set' : 'NOT SET - replace YOUR_API_KEY in script src'));
+    log('NotifMoo dimuat. apikey: ' + (NotifMoo.apikey ? 'tersedia' : 'BELUM DISET - ganti YOUR_API_KEY di script src'));
   </script>
 </body>
 </html>
