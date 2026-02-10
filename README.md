@@ -52,6 +52,53 @@ cargo run
 
 Server mendengarkan di `http://0.0.0.0:3000`. Dashboard: daftar di `/register.html`, login di `/login.html`, lalu akses `/`.
 
+## Build untuk production
+
+```bash
+# Build release (optimized, binary di target/release/notif)
+cargo build --release
+```
+
+Binary hasil build: **`target/release/notif`**.
+
+**Menjalankan di production:**
+
+1. Siapkan environment production (PostgreSQL, Redis, `.env` dengan `DATABASE_URL`, `REDIS_URL`, `APP_KEY`, `APP_SECRET`, `JWT_SECRET`, dll).
+2. Jalankan migration sekali: `psql "$DATABASE_URL" -f migrations/001_init_schema.sql`
+3. Jalankan binary:
+   ```bash
+   ./target/release/notif
+   ```
+   Atau copy binary ke server dan jalankan di sana (mis. dengan systemd):
+
+   ```ini
+   # /etc/systemd/system/notif.service
+   [Unit]
+   Description=Notif WebSocket server
+   After=network.target postgresql.service redis.service
+
+   [Service]
+   Type=simple
+   WorkingDirectory=/opt/notif
+   ExecStart=/opt/notif/notif
+   Restart=on-failure
+   EnvironmentFile=/opt/notif/.env
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+   ```bash
+   sudo systemctl daemon-reload && sudo systemctl enable notif && sudo systemctl start notif
+   ```
+
+**Opsional** — memperkecil ukuran binary:
+
+```bash
+# Strip symbol (Linux/macOS)
+strip target/release/notif
+```
+
 ## Testing
 
 ```bash
