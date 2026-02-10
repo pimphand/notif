@@ -129,13 +129,17 @@
     }
   </style>
   <!--
-    Ganti YOUR_API_KEY dengan API key dari halaman Domains.
-    Untuk pengembangan lokal, host WebSocket default service ini ada di ws://localhost:3000/ws
-    sehingga kita set parameter host=ws://localhost:3000.
-    Di produksi, Anda bisa menggantinya ke wss://notification.officialconnect.id atau host lain.
+    Ganti API key di bawah dengan API key dari halaman Domains.
+
+    Untuk pengembangan lokal:
+    - Server Notif Anda jalan di http://localhost:3000
+    - WebSocket akan otomatis mengarah ke ws://localhost:3000/ws
+    - HTTP broadcast cukup pakai path relatif /api/broadcast (tanpa CORS problem)
+
+    Di produksi, Anda bisa mengganti host ke wss://notification.officialconnect.id
+    atau host lain sesuai deployment Anda.
   -->
-  <script
-    src="https://cdn.jsdelivr.net/gh/pimphand/notifmoo_@main/setup.js?apikey=nk_a34c07f1a78e40afaf1d2b0113ff9489"></script>
+  <script src="notifmoo.js?apikey=nk_ef43496d91cc4b52b08a00ae51fde04a&host=ws://localhost:3000"></script>
 </head>
 
 <body>
@@ -237,12 +241,13 @@
       if (!text) return;
       textInput.value = '';
 
-      // Endpoint resmi Notif untuk broadcast ke channel WebSocket
-      fetch('https://notification.officialconnect.id/api/broadcast', {
+      // Endpoint HTTP broadcast ke server Notif lokal (same-origin)
+      // Menghindari error CORS karena request tidak lagi cross-origin.
+      fetch('/api/broadcast', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-app-key': 'nk_a34c07f1a78e40afaf1d2b0113ff9489'
+          'x-app-key': 'nk_ef43496d91cc4b52b08a00ae51fde04a'
         },
         body: JSON.stringify({
           channel: room,
