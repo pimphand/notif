@@ -31,7 +31,7 @@
     var base = hostParam.replace(/\/+$/, '');
     wsUrl = base + '/ws' + (apikey ? '?api_key=' + encodeURIComponent(apikey) : '');
   } else {
-    wsUrl = 'wss://notification.officialconnect.id/ws' + (apikey ? '?api_key=' + encodeURIComponent(apikey) : '');
+    wsUrl = 'wss://notifmoo.dmpt.my.id/ws' + (apikey ? '?api_key=' + encodeURIComponent(apikey) : '');
   }
 
   var ws = null;
