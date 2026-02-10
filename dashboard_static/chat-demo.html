@@ -172,9 +172,8 @@
       if (!text) return;
       textInput.value = '';
 
-      // Ganti URL ini dengan endpoint backend Anda yang akan
-      // mem-broadcast pesan ke channel "room" melalui Notif.
-      fetch('/api/chat/send', {
+      // Endpoint untuk mengirim pesan chat (akan di-broadcast ke channel "room")
+      fetch('https://notification.officialconnect.id/api/chat/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ channel: room, name: name, text: text })
